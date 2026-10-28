@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- ========== SEO 基础元标签 ========== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="精选5个国内可直连的免费大模型API平台，包含硅基流动、基元律动、智谱AI、RunningHub等，注册即送免费调用额度，兼容OpenAI接口，适用于AI开发、本地客户端接入、脚本工具开发与测试。">
+    <meta name="keywords" content="大模型API,免费API接口,硅基流动,智谱AI,RunningHub,AI开发,大语言模型,多模态API,国内直连">
+    <meta name="author" content="AI工具导航">
+    <meta name="robots" content="index, follow">
+    
+    <!-- OG 分享标签 -->
+    <meta property="og:title" content="实测5个免费大模型API平台 | 国内直连注册即领额度">
+    <meta property="og:description" content="整理5个稳定靠谱的大模型API平台，注册就送免费调用额度，国内访问稳定，支持外部API调用。">
+    <meta property="og:type" content="website">
+    
+    <title>实测5个免费大模型API平台 | 国内直连注册即领可用额度 - AI开发工具导航</title>
+
+    <!-- ========== 外部资源 CDN ========== -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- ========== 自定义样式 ========== -->
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        /* 背景渐变与装饰 */
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 玻璃拟态卡片 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.3);
+        }
+
+        /* 渐变文字 */
+        .gradient-text {
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* 滚动入场动画 */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 筛选标签激活态 */
+        .filter-tab.active {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* FAQ 折叠动画 */
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .faq-item.open .faq-content {
+            max-height: 500px;
+        }
+
+        .faq-item.open .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-icon {
+            transition: transform 0.3s ease;
+        }
+
+        /* 复制成功提示 */
+        .copy-toast {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: rgba(34, 197, 94, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* 回到顶部按钮 */
+        .back-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 999;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .back-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+        }
+
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* 按钮扫光效果 */
+        .btn-glow {
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: left 0.6s;
+        }
+        .btn-glow:hover::before {
+            left: 100%;
+        }
+    </style>
+</head>
+<body class="text-gray-100">
+    <!-- 复制成功提示 -->
+    <div class="copy-toast" id="copyToast">
+        <i class="fa fa-check-circle mr-2"></i>链接已复制到剪贴板
+    </div>
+
+    <!-- 回到顶部按钮 -->
+    <div class="back-top" id="backTop" aria-label="回到顶部">
+        <i class="fa fa-arrow-up"></i>
+    </div>
+
+    <!-- 背景装饰光晕 -->
+    <div class="bg-orb w-96 h-96 bg-indigo-600 top-0 -left-48"></div>
+    <div class="bg-orb w-80 h-80 bg-purple-600 top-1/3 -right-40"></div>
+    <div class="bg-orb w-72 h-72 bg-pink-500 bottom-20 left-1/4"></div>
+
+    <!-- ========== 顶部导航 ========== -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-card border-t-0 border-l-0 border-r-0">
+        <nav class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                    <i class="fa fa-microchip text-white"></i>
+                </div>
+                <span class="font-semibold text-lg">AI API 导航</span>
+            </div>
+            <div class="hidden md:flex items-center gap-8 text-sm">
+                <a href="#platforms" class="text-gray-300 hover:text-white transition-colors">平台推荐</a>
+                <a href="#comparison" class="text-gray-300 hover:text-white transition-colors">对比表格</a>
+                <a href="#faq" class="text-gray-300 hover:text-white transition-colors">常见问题</a>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-gray-300">
+                <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                <span class="hidden sm:inline">实测有效</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ========== 主内容区 ========== -->
+    <main class="relative z-10">
+        
+        <!-- Hero 英雄区 -->
+        <section class="max-w-6xl mx-auto px-6 pt-32 pb-16 text-center scroll-reveal">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-sm mb-6">
+                <i class="fa fa-star text-yellow-400"></i>
+                <span class="text-gray-200">2026 最新整理 · 国内直连 · 注册即送额度</span>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                <span class="gradient-text">5 个免费大模型 API 平台</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed mb-8">
+                做 AI 开发、本地客户端接入、写脚本、跑工具都需要 API 密钥<br class="hidden md:block">
+                整理 5 个稳定靠谱平台，注册就送免费调用额度
+            </p>
+            
+            <!-- 数据概览 -->
+            <div class="grid grid-cols-3 gap-4 max-w-xl mx-auto">
+                <article class="glass-card rounded-2xl p-4">
+                    <div class="text-2xl md:text-3xl font-bold gradient-text">5+</div>
+                    <div class="text-sm text-gray-400 mt-1">精选平台</div>
+                </article>
+                <article class="glass-card rounded-2xl p-4">
+                    <div class="text-2xl md:text-3xl font-bold gradient-text">100%</div>
+                    <div class="text-sm text-gray-400 mt-1">实测有效</div>
+                </article>
+                <article class="glass-card rounded-2xl p-4">
+                    <div class="text-2xl md:text-3xl font-bold gradient-text">免费</div>
+                    <div class="text-sm text-gray-400 mt-1">新人额度</div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 温馨提示 -->
+        <section class="max-w-6xl mx-auto px-6 mb-12 scroll-reveal">
+            <div class="glass-card rounded-2xl p-5 border-l-4 border-l-amber-400">
+                <div class="flex items-start gap-4">
+                    <div class="text-2xl flex-shrink-0">💡</div>
+                    <div>
+                        <h3 class="font-semibold text-amber-200 mb-1">小提示</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            点击下方专属邀请链接注册，才能拿到对应新人福利。注册后完成实名认证，即可领取赠送额度，生成自己的 API-Key 直接使用。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 平台列表区 -->
+        <section id="platforms" class="max-w-6xl mx-auto px-6 mb-16 scroll-reveal">
+            <h2 class="text-2xl font-bold mb-6 text-center">精选平台推荐</h2>
+            
+            <!-- 筛选标签 -->
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <button class="filter-tab active px-4 py-2 rounded-full text-sm border border-white/20 transition-all" data-filter="all">
+                    全部平台
+                </button>
+                <button class="filter-tab px-4 py-2 rounded-full text-sm border border-white/20 transition-all hover:border-white/40" data-filter="llm">
+                    大语言模型
+                </button>
+                <button class="filter-tab px-4 py-2 rounded-full text-sm border border-white/20 transition-all hover:border-white/40" data-filter="multimodal">
+                    多模态
+                </button>
+                <button class="filter-tab px-4 py-2 rounded-full text-sm border border-white/20 transition-all hover:border-white/40" data-filter="domestic">
+                    国内直连
+                </button>
+            </div>
+
+            <!-- 平台卡片容器 -->
+            <div class="space-y-5" id="platformList">
+
+                <!-- 平台 1: 硅基流动 -->
+                <article class="platform-card glass-card rounded-3xl p-6 md:p-8" data-category="llm domestic">
+                    <div class="flex flex-col md:flex-row md:items-center gap-6">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-xl font-bold flex-shrink-0">
+                            硅
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2 flex-wrap">
+                                <h3 class="text-xl font-bold">硅基流动 SiliconFlow</h3>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs bg-green-500/20 text-green-300 border border-green-500/30">
+                                    推荐首选
+                                </span>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                    OpenAI 兼容
+                                </span>
+                            </div>
+                            <p class="text-gray-300 mb-4 text-sm leading-relaxed">
+                                聚合 100+ 主流大模型，DeepSeek、千问、Kimi 等全都有，低延迟高并发，国内体量很大的 Token 平台，兼容 OpenAI 接口，上手简单。
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">低延迟</span>
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">高并发</span>
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">高性价比</span>
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">100+ 模型</span>
+                            </div>
+                            <div class="text-sm">
+                                <span class="text-gray-400">新人福利：</span>
+                                <span class="text-emerald-300 font-medium">注册实名送 16 元调用额度，个人可用数月</span>
+                            </div>
+                        </div>
+                        <div class="flex md:flex-col gap-3 md:min-w-[140px]">
+                            <a href="https://cloud.siliconflow.cn/i/9VTziPIQ" target="_blank" rel="noopener noreferrer"
+                               class="btn-glow flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 font-medium hover:shadow-lg hover:shadow-cyan-500/30 transition-all">
+                                <span>立即注册</span>
+                                <i class="fa fa-external-link-alt text-xs"></i>
+                            </a>
+                            <button class="copy-btn flex-1 md:flex-none px-5 py-3 rounded-xl border border-white/20 text-sm hover:bg-white/10 transition-all"
+                                    data-url="https://cloud.siliconflow.cn/i/9VTziPIQ">
+                                <i class="fa fa-copy mr-2"></i>复制链接
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 平台 2: 基元律动 -->
+                <article class="platform-card glass-card rounded-3xl p-6 md:p-8" data-category="llm domestic">
+                    <div class="flex flex-col md:flex-row md:items-center gap-6">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-400 to-purple-600 flex items-center justify-center text-xl font-bold flex-shrink-0">
+                            基
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2 flex-wrap">
+                                <h3 class="text-xl font-bold">基元律动 TokenRhythm</h3>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                                    智能路由
+                                </span>
+                            </div>
+                            <p class="text-gray-300 mb-4 text-sm leading-relaxed">
+                                一站式聚合多模型，一个 API Key 调用海量模型，支持智能路由，充值买一送一活动限时进行中。
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">智能路由</span>
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">多模型聚合</span>
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">充值优惠</span>
+                            </div>
+                            <div class="text-sm">
+                                <span class="text-gray-400">新人福利：</span>
+                                <span class="text-emerald-300 font-medium">实名认证送 18 元免费额度</span>
+                            </div>
+                        </div>
+                        <div class="flex md:flex-col gap-3 md:min-w-[140px]">
+                            <a href="https://tokenrhythm.studio/i/rf_tr_C2ZRG6" target="_blank" rel="noopener noreferrer"
+                               class="btn-glow flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-purple-600 font-medium hover:shadow-lg hover:shadow-purple-500/30 transition-all">
+                                <span>立即注册</span>
+                                <i class="fa fa-external-link-alt text-xs"></i>
+                            </a>
+                            <button class="copy-btn flex-1 md:flex-none px-5 py-3 rounded-xl border border-white/20 text-sm hover:bg-white/10 transition-all"
+                                    data-url="https://tokenrhythm.studio/i/rf_tr_C2ZRG6">
+                                <i class="fa fa-copy mr-2"></i>复制链接
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 平台 3: 智谱 AI -->
+                <article class="platform-card glass-card rounded-3xl p-6 md:p-8" data-category="llm domestic">
+                    <div class="flex flex-col md:flex-row md:items-center gap-6">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center text-xl font-bold flex-shrink-0">
+                            智
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2 flex-wrap">
+                                <h3 class="text-xl font-bold">智谱 AI BigModel</h3>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                    官方平台
+                                </span>
+                            </div>
+                            <p class="text-gray-300 mb-4 text-sm leading-relaxed">
+                                智谱官方开放平台，原生 GLM 系列模型，最新 GLM-5.3 可直接调用，国产自研模型，稳定性强。
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">GLM 原生</span>
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">国产自研</span>
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">稳定可靠</span>
+                            </div>
+                            <div class="text-sm">
+                                <span class="text-gray-400">新人福利：</span>
+                                <span class="text-emerald-300 font-medium">赠送 2000 万 Tokens 超大额度</span>
+                            </div>
+                        </div>
+                        <div class="flex md:flex-col gap-3 md:min-w-[140px]">
+                            <a href="https://www.bigmodel.cn/invite?icode=XG%2FAr2D7pjbGwf3MI83HHWczbXFgPRGIalpycrEwJ28%3D" target="_blank" rel="noopener noreferrer"
+                               class="btn-glow flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 font-medium hover:shadow-lg hover:shadow-blue-500/30 transition-all">
+                                <span>立即注册</span>
+                                <i class="fa fa-external-link-alt text-xs"></i>
+                            </a>
+                            <button class="copy-btn flex-1 md:flex-none px-5 py-3 rounded-xl border border-white/20 text-sm hover:bg-white/10 transition-all"
+                                    data-url="https://www.bigmodel.cn/invite?icode=XG%2FAr2D7pjbGwf3MI83HHWczbXFgPRGIalpycrEwJ28%3D">
+                                <i class="fa fa-copy mr-2"></i>复制链接
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 平台 4: RunningHub 国际版 -->
+                <article class="platform-card glass-card rounded-3xl p-6 md:p-8" data-category="multimodal">
+                    <div class="flex flex-col md:flex-row md:items-center gap-6">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center text-lg font-bold flex-shrink-0">
+                            RH
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2 flex-wrap">
+                                <h3 class="text-xl font-bold">RunningHub 国际版</h3>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs bg-orange-500/20 text-orange-300 border border-orange-500/30">
+                                    多模态
+                                </span>
+                            </div>
+                            <p class="text-gray-300 mb-4 text-sm leading-relaxed">
+                                支持文生图、文生视频、大语言模型，审核宽松，多模态模型齐全，适合做图像视频类 AI 项目。
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">文生图</span>
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">文生视频</span>
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">审核宽松</span>
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">H3 模型</span>
+                            </div>
+                            <div class="text-sm">
+                                <span class="text-gray-400">新人福利：</span>
+                                <span class="text-emerald-300 font-medium">注册即送 1000 积分，抵扣算力</span>
+                            </div>
+                        </div>
+                        <div class="flex md:flex-col gap-3 md:min-w-[140px]">
+                            <a href="https://www.runninghub.ai?inviteCode=hy33ms9q" target="_blank" rel="noopener noreferrer"
+                               class="btn-glow flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 font-medium hover:shadow-lg hover:shadow-orange-500/30 transition-all">
+                                <span>立即注册</span>
+                                <i class="fa fa-external-link-alt text-xs"></i>
+                            </a>
+                            <button class="copy-btn flex-1 md:flex-none px-5 py-3 rounded-xl border border-white/20 text-sm hover:bg-white/10 transition-all"
+                                    data-url="https://www.runninghub.ai?inviteCode=hy33ms9q">
+                                <i class="fa fa-copy mr-2"></i>复制链接
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 平台 5: RunningHub 国内版 -->
+                <article class="platform-card glass-card rounded-3xl p-6 md:p-8" data-category="multimodal domestic">
+                    <div class="flex flex-col md:flex-row md:items-center gap-6">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-lg font-bold flex-shrink-0">
+                            RH
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2 flex-wrap">
+                                <h3 class="text-xl font-bold">RunningHub 国内版</h3>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                    国内直连
+                                </span>
+                            </div>
+                            <p class="text-gray-300 mb-4 text-sm leading-relaxed">
+                                国内直连，网络稳定，适合办公、短视频 AI 生成、开发调试，模型库丰富，中文适配更好。
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">国内直连</span>
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">网络稳定</span>
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">中文优化</span>
+                                <span class="px-3 py-1 rounded-full text-xs bg-white/10 text-gray-200">短视频创作</span>
+                            </div>
+                            <div class="text-sm">
+                                <span class="text-gray-400">新人福利：</span>
+                                <span class="text-emerald-300 font-medium">注册即送 1000 积分</span>
+                            </div>
+                        </div>
+                        <div class="flex md:flex-col gap-3 md:min-w-[140px]">
+                            <a href="https://www.runninghub.cn?inviteCode=vkq2wplk" target="_blank" rel="noopener noreferrer"
+                               class="btn-glow flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 font-medium hover:shadow-lg hover:shadow-emerald-500/30 transition-all">
+                                <span>立即注册</span>
+                                <i class="fa fa-external-link-alt text-xs"></i>
+                            </a>
+                            <button class="copy-btn flex-1 md:flex-none px-5 py-3 rounded-xl border border-white/20 text-sm hover:bg-white/10 transition-all"
+                                    data-url="https://www.runninghub.cn?inviteCode=vkq2wplk">
+                                <i class="fa fa-copy mr-2"></i>复制链接
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- 对比表格 -->
+        <section id="comparison" class="max-w-6xl mx-auto px-6 mb-16 scroll-reveal">
+            <h2 class="text-2xl font-bold mb-6 text-center">平台快速对比</h2>
+            <div class="glass-card rounded-3xl p-6 md:p-8 overflow-x-auto">
+                <table class="w-full text-sm min-w-[600px]">
+                    <thead>
+                        <tr class="border-b border-white/10">
+                            <th class="text-left py-3 px-4 font-medium text-gray-300">平台名称</th>
+                            <th class="text-center py-3 px-4 font-medium text-gray-300">新人额度</th>
+                            <th class="text-center py-3 px-4 font-medium text-gray-300">核心优势</th>
+                            <th class="text-center py-3 px-4 font-medium text-gray-300">适合场景</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-200">
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="py-4 px-4 font-medium">硅基流动</td>
+                            <td class="text-center py-4 px-4 text-emerald-300">16 元</td>
+                            <td class="text-center py-4 px-4">模型全、速度快</td>
+                            <td class="text-center py-4 px-4">通用开发、批量调用</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="py-4 px-4 font-medium">基元律动</td>
+                            <td class="text-center py-4 px-4 text-emerald-300">18 元</td>
+                            <td class="text-center py-4 px-4">智能路由</td>
+                            <td class="text-center py-4 px-4">对话调试、日常使用</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="py-4 px-4 font-medium">智谱 AI</td>
+                            <td class="text-center py-4 px-4 text-emerald-300">2000万 Tokens</td>
+                            <td class="text-center py-4 px-4">官方原生、稳定</td>
+                            <td class="text-center py-4 px-4">GLM 系列开发</td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <td class="py-4 px-4 font-medium">RunningHub 国际</td>
+                            <td class="text-center py-4 px-4 text-emerald-300">1000 积分</td>
+                            <td class="text-center py-4 px-4">多模态丰富</td>
+                            <td class="text-center py-4 px-4">图像视频创作</td>
+                        </tr>
+                        <tr class="hover:bg-white/5 transition-colors">
+                            <td class="py-4 px-4 font-medium">RunningHub 国内</td>
+                            <td class="text-center py-4 px-4 text-emerald-300">1000 积分</td>
+                            <td class="text-center py-4 px-4">国内网络稳定</td>
+                            <td class="text-center py-4 px-4">短视频、电商创作</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- FAQ 常见问题 -->
+        <section id="faq" class="max-w-4xl mx-auto px-6 mb-16 scroll-reveal">
+            <h2 class="text-2xl font-bold mb-6 text-center">常见问题</h2>
+            <div class="space-y-3">
+                
+                <div class="faq-item glass-card rounded-2xl overflow-hidden">
+                    <button class="faq-header w-full px-6 py-4 flex items-center justify-between text-left hover:bg-white/5 transition-colors">
+                        <span class="font-medium">这些平台需要实名认证吗？</span>
+                        <i class="fa fa-chevron-down faq-icon text-gray-400 text-sm"></i>
+                    </button>
+                    <div class="faq-content">
+                        <div class="px-6 pb-4 text-sm text-gray-300 leading-relaxed">
+                            是的，国内平台均需完成实名认证后才能领取免费额度并生成 API Key。这是国内互联网服务的合规要求，认证过程简单，通常只需上传身份证并完成人脸核验。
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item glass-card rounded-2xl overflow-hidden">
+                    <button class="faq-header w-full px-6 py-4 flex items-center justify-between text-left hover:bg-white/5 transition-colors">
+                        <span class="font-medium">免费额度够用多久？</span>
+                        <i class="fa fa-chevron-down faq-icon text-gray-400 text-sm"></i>
+                    </button>
+                    <div class="faq-content">
+                        <div class="px-6 pb-4 text-sm text-gray-300 leading-relaxed">
+                            个人学习和轻度开发场景下，单平台免费额度通常可使用 1-6 个月不等。如果全部注册轮换使用，足以支撑大半年的学习与测试需求。
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item glass-card rounded-2xl overflow-hidden">
+                    <button class="faq-header w-full px-6 py-4 flex items-center justify-between text-left hover:bg-white/5 transition-colors">
+                        <span class="font-medium">API 兼容 OpenAI 格式吗？</span>
+                        <i class="fa fa-chevron-down faq-icon text-gray-400 text-sm"></i>
+                    </button>
+                    <div class="faq-content">
+                        <div class="px-6 pb-4 text-sm text-gray-300 leading-relaxed">
+                            硅基流动、基元律动等聚合平台均兼容 OpenAI 接口格式，只需修改 base_url 和 API Key 即可无缝替换原有代码，降低迁移成本。
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item glass-card rounded-2xl overflow-hidden">
+                    <button class="faq-header w-full px-6 py-4 flex items-center justify-between text-left hover:bg-white/5 transition-colors">
+                        <span class="font-medium">可以用于商业项目吗？</span>
+                        <i class="fa fa-chevron-down faq-icon text-gray-400 text-sm"></i>
+                    </button>
+                    <div class="faq-content">
+                        <div class="px-6 pb-4 text-sm text-gray-300 leading-relaxed">
+                            各平台均支持商业使用，具体需参考对应平台的服务协议。免费额度同样可用于商业项目测试，正式商用建议充值升级对应套餐。
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 总结区域 -->
+        <section class="max-w-4xl mx-auto px-6 mb-20 scroll-reveal">
+            <div class="glass-card rounded-3xl p-8 md:p-10 text-center">
+                <div class="text-3xl mb-4">📌</div>
+                <h2 class="text-2xl font-bold mb-4 gradient-text">使用总结</h2>
+                <p class="text-gray-300 max-w-xl mx-auto mb-6 leading-relaxed">
+                    以上平台全部实测稳定可用，都可以生成标准 API 密钥，兼容绝大多数 AI 客户端、开发脚本。建议全部注册领取免费额度，轮换使用更划算。
+                </p>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="p-4 rounded-2xl bg-white/5">
+                        <div class="text-2xl mb-2">🎯</div>
+                        <h4 class="font-semibold mb-1">单平台使用</h4>
+                        <p class="text-xs text-gray-400">选一个主力平台，日常学习开发足够</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white/5">
+                        <div class="text-2xl mb-2">🔄</div>
+                        <h4 class="font-semibold mb-1">多平台轮换</h4>
+                        <p class="text-xs text-gray-400">全部注册，额度叠加，使用更长久</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white/5">
+                        <div class="text-2xl mb-2">⚡</div>
+                        <h4 class="font-semibold mb-1">即开即用</h4>
+                        <p class="text-xs text-gray-400">生成 API Key 即可接入各类工具</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== 页脚 ========== -->
+    <footer class="relative z-10 border-t border-white/10 py-8">
+        <div class="max-w-6xl mx-auto px-6 text-center text-gray-400 text-sm">
+            <p class="mb-2">整理不易，建议收藏备用 · 所有链接均为专属邀请链接</p>
+            <p class="text-xs text-gray-500">© 2026 AI API 导航 · 持续更新优质大模型接口资源</p>
+        </div>
+    </footer>
+
+    <!-- ========== JavaScript 交互逻辑 ========== -->
+    <script>
+        // 1. 滚动入场动画
+        const revealElements = document.querySelectorAll('.scroll-reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // 2. 平台筛选功能
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const platformCards = document.querySelectorAll('.platform-card');
+
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // 切换激活状态
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                const filter = tab.dataset.filter;
+
+                platformCards.forEach(card => {
+                    const categories = card.dataset.category.split(' ');
+                    if (filter === 'all' || categories.includes(filter)) {
+                        card.style.display = 'block';
+                        // 重排动画
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 50);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(10px)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // 3. 一键复制链接功能
+        const copyBtns = document.querySelectorAll('.copy-btn');
+        const copyToast = document.getElementById('copyToast');
+
+        copyBtns.forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const url = btn.dataset.url;
+                try {
+                    await navigator.clipboard.writeText(url);
+                    copyToast.classList.add('show');
+                    setTimeout(() => {
+                        copyToast.classList.remove('show');
+                    }, 2000);
+                } catch (err) {
+                    // 降级方案
+                    const textarea = document.createElement('textarea');
+                    textarea.value = url;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    copyToast.classList.add('show');
+                    setTimeout(() => {
+                        copyToast.classList.remove('show');
+                    }, 2000);
+                }
+            });
+        });
+
+        // 4. FAQ 折叠面板
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const header = item.querySelector('.faq-header');
+            header.addEventListener('click', () => {
+                // 关闭其他项
+                faqItems.forEach(other => {
+                    if (other !== item) other.classList.remove('open');
+                });
+                // 切换当前项
+                item.classList.toggle('open');
+            });
+        });
+
+        // 5. 回到顶部按钮
+        const backTop = document.getElementById('backTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                backTop.classList.add('show');
+            } else {
+                backTop.classList.remove('show');
+            }
+        });
+
+        backTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 平滑滚动到锚点
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offsetTop = target.offsetTop - 80;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+<!-- （注：内容由AI生成） -->
